@@ -1,0 +1,13 @@
+__pycache__/
+__pypackages__/
+logs/
+artifacts/
+lightning_logs/
+volumes/
+
+
+*.wav
+*.mp3
+*.log
+*.egg-info/
+*.egg
