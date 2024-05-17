@@ -1,0 +1,25 @@
+dataset:
+  train:
+    
+    audio_list_file: ./metadata/fma_medium/train_split.jsonl
+    sample_rate: 8000
+    segment_offset: 1.2
+    segment_size: 1.0
+    hop_size: 0.5
+    
+    augmentation:
+      background:
+        list_file: ./metadata/noise/background/train_split.jsonl
+        snr_min: 0
+        snr_max: 10
+        cache_dir: ./cache/
+      ir:
+        list_file: ./metadata/noise/impulse_response/train_split.jsonl
+        length: 1.0
+  
+  val:
+    audio_list_file: ./metadata/fma_medium/val_split.jsonl
+    sample_rate: 8000
+    segment_offset: 1.2
+    segment_size: 1.0
+    hop_size: 0.5

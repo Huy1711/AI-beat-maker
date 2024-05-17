@@ -5,6 +5,7 @@ artifacts/
 lightning_logs/
 volumes/
 datasets/
+cache/
 
 *.wav
 *.mp3

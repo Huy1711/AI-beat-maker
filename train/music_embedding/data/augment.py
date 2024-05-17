@@ -1,5 +1,10 @@
+"""
+Audio data augmentation inspired by
+https://github.com/stdio2016/pfann/blob/main/datautil/ir.py
+https://github.com/stdio2016/pfann/blob/main/datautil/noise.py
+"""
+
 import os
-from typing import List, Optional
 
 import numpy as np
 import torch
@@ -10,8 +15,8 @@ import tqdm
 from ..utils.common import load_dataset
 
 
-class IR(object):
-    def __init__(self, list_file, length, segment_size, sample_rate=8000):
+class ImpulseResponseNoise(object):
+    def __init__(self, list_file, length, segment_size=1.0, sample_rate=8000):
         self.segment_size = segment_size * sample_rate
         noises = load_dataset(list_file)
         ir_len = int(length * sample_rate)
@@ -96,12 +101,18 @@ class BackGroundNoise(object):
 
 
 class RandomClip(object):
-    def __init__(self, sample_rate, segment_offset, segment_size):
+    """
+    Randomly cut original audio into fixed size segment 
+        (e.g. randomly clip 1s from 1.2s audio with 
+        segment_offset = 1.2 * sample_rate; segment_size = 1 * sample_rate)
+    """
+    def __init__(self, segment_offset, segment_size, sample_rate=8000):
         self.sample_rate = sample_rate
         self.segment_offset = int(segment_offset * self.sample_rate)
         self.segment_size = int(segment_size * self.sample_rate)
 
     def apply(self, xs: torch.Tensor) -> torch.Tensor:
+        # randomly sample a start index from [0: ]
         offset_range = int(self.segment_offset - self.segment_size)
         rand_offsets = torch.randint(high=offset_range, size=(len(xs),)).tolist()
         xs_aug = [
