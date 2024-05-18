@@ -68,6 +68,6 @@ loggers:
 trainer:
   max_epochs: 100
   strategy: ddp_find_unused_parameters_false
-  accelerator: cpu
-  # devices: [3]
-  fast_dev_run: 5
+  accelerator: gpu
+  devices: [0]
+  fast_dev_run: false
