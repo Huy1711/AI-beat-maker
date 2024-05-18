@@ -1,2 +1,6 @@
 soundfile
 tqdm
+torch-optimizer
+lightning
+tensorboardX
+tensorboard

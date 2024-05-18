@@ -1,7 +1,7 @@
 dataset:
   train:
-    
-    audio_list_file: ./metadata/fma_medium/train_split.jsonl
+    dataset_dir: ../datasets/neural-audio-fp-dataset
+    audio_list_file: metadata/fma_medium/train_split.jsonl
     sample_rate: 8000
     segment_offset: 1.2
     segment_size: 1.0
@@ -9,17 +9,65 @@ dataset:
     
     augmentation:
       background:
-        list_file: ./metadata/noise/background/train_split.jsonl
+        dataset_dir: ../datasets/neural-audio-fp-dataset
+        list_file: metadata/noise/background/train_split.jsonl
         snr_min: 0
         snr_max: 10
         cache_dir: ./cache/
       ir:
+        dataset_dir: ../datasets/neural-audio-fp-dataset
         list_file: ./metadata/noise/impulse_response/train_split.jsonl
         length: 1.0
   
   val:
-    audio_list_file: ./metadata/fma_medium/val_split.jsonl
+    dataset_dir: ../datasets/neural-audio-fp-dataset
+    audio_list_file: metadata/fma_medium/val_split.jsonl
     sample_rate: 8000
     segment_offset: 1.2
     segment_size: 1.0
     hop_size: 0.5
+
+  loaders:
+    batch_size: 4 # files
+    num_workers: 4
+
+model:
+  neuralfp:
+    d: 128
+    h: 1024
+    u: 32
+    in_F: 256
+    sample_rate: 8000
+    segment_size: 1.0
+    stft_hop: 256
+
+optimizer:
+  lr: 1e-4
+  weight_decay: 1e-6
+  clamp_value: 1e3
+
+scheduler:
+  eta_min: 1e-7
+
+
+callbacks:
+  checkpointing:
+    monitor: val_loss
+    save_top_k: 10
+    save_last: True
+    filename: "{epoch}-{val_loss:.5f}"
+    every_n_epochs: 5
+
+loggers:
+  tensorboard:
+    save_dir: lightning_logs
+    name: null
+    version: null
+    default_hp_metric: false
+
+trainer:
+  max_epochs: 100
+  strategy: ddp_find_unused_parameters_false
+  accelerator: cpu
+  # devices: [3]
+  fast_dev_run: 5

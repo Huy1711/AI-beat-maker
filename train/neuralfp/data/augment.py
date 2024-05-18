@@ -16,8 +16,15 @@ from ..utils.common import load_dataset
 
 
 class ImpulseResponseNoise(object):
-    def __init__(self, list_file, length, segment_size=1.0, sample_rate=8000):
-        self.segment_size = segment_size * sample_rate
+    def __init__(
+        self,
+        dataset_dir: str,
+        list_file: str,
+        length: float = 1.0,
+        segment_size: float = 1.0,
+        sample_rate: int = 8000,
+    ):
+        self.segment_size = int(segment_size * sample_rate)
         noises = load_dataset(list_file)
         ir_len = int(length * sample_rate)
         fft_needed = self.segment_size + length
@@ -26,7 +33,8 @@ class ImpulseResponseNoise(object):
             self.fftconv_n *= 2
         self.noises = []
         for noise in tqdm.tqdm(noises, desc="Loading IR"):
-            smp, sr = torchaudio.load(noise["audio_filepath"])
+            filename = os.path.join(dataset_dir, noise["audio_filepath"])
+            smp, sr = torchaudio.load(filename)
             if sr != sample_rate:
                 raise Exception(f"IR's sample rate is {sr}Hz not {sample_rate}Hz")
             smp = smp.squeeze()
@@ -49,20 +57,28 @@ class ImpulseResponseNoise(object):
 
 
 class BackGroundNoise(object):
-    def __init__(self, list_file, snr_min, snr_max, cache_dir, sample_rate=8000):
+    def __init__(
+        self,
+        dataset_dir: str,
+        list_file: str,
+        cache_dir: str,
+        snr_min: int = 0,
+        snr_max: int = 10,
+        sample_rate: int = 8000,
+    ):
         self.snr_min = snr_min
         self.snr_max = snr_max
         os.makedirs(cache_dir, exist_ok=True)
         cache_file_name = os.path.basename(list_file).split(".")[-2]
-        self.cache_file = os.path.join(cache_dir, cache_file_name + ".npy")
+        self.cache_file = os.path.join(cache_dir, cache_file_name + "_bg.npy")
 
         self.data = self.load_from_cache()
         if self.data is None:
             noises = load_dataset(list_file)
             save_file = open(self.cache_file, "ab")
             for noise in tqdm.tqdm(noises, desc="Loading Background noise"):
-                name = noise["audio_filepath"]
-                smp, sr = torchaudio.load(name)
+                filename = os.path.join(dataset_dir, noise["audio_filepath"])
+                smp, sr = torchaudio.load(filename)
                 if sr != sample_rate:
                     raise Exception(
                         f"Background noise's sample rate is {sr}Hz not {sample_rate}Hz"
@@ -102,18 +118,23 @@ class BackGroundNoise(object):
 
 class RandomClip(object):
     """
-    Randomly cut original audio into fixed size segment 
-        (e.g. randomly clip 1s from 1.2s audio with 
+    Randomly cut original audio into fixed size segment
+        (e.g. randomly clip 1s from 1.2s audio with
         segment_offset = 1.2 * sample_rate; segment_size = 1 * sample_rate)
     """
-    def __init__(self, segment_offset, segment_size, sample_rate=8000):
+
+    def __init__(
+        self,
+        segment_offset: float = 1.2,
+        segment_size: float = 1.0,
+        sample_rate: int = 8000,
+    ):
         self.sample_rate = sample_rate
         self.segment_offset = int(segment_offset * self.sample_rate)
         self.segment_size = int(segment_size * self.sample_rate)
 
     def apply(self, xs: torch.Tensor) -> torch.Tensor:
-        # randomly sample a start index from [0: ]
-        offset_range = int(self.segment_offset - self.segment_size)
+        offset_range = self.segment_offset - self.segment_size
         rand_offsets = torch.randint(high=offset_range, size=(len(xs),)).tolist()
         xs_aug = [
             xi[offset : offset + min(self.segment_size, xi.shape[-1])]
