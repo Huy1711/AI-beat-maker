@@ -69,5 +69,5 @@ trainer:
   max_epochs: 100
   strategy: ddp_find_unused_parameters_false
   accelerator: gpu
-  devices: [0]
+  devices: [0, 1]
   fast_dev_run: false
