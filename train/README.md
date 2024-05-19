@@ -4,7 +4,7 @@ This folder contains the code for reproducing [Neural Audio Fingerprint (NeuralF
 
 This implementation is mostly inspired by [Original TensorFlow implementation](https://github.com/mimbres/neural-audio-fp) and [PyTorch implementation by Yi-Feng Chen](https://github.com/stdio2016/pfann).
 
-I'm using [pytorch_lightning](https://lightning.ai/) for fast model experimenting and configuration. The training script is `train_neuralfp.py` and the main training module is in `neuralfp/module/audio_fingerprint.py`.
+[Pytorch lightning](https://lightning.ai/) library is used for fast model experimenting and configuration. The training script is `train_neuralfp.py` and the main training module is in `neuralfp/module/audio_fingerprint.py`.
 
 ## How to reproduce
 

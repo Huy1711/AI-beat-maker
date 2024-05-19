@@ -1,10 +1,10 @@
 """
-This script export pytorch_lightning module checkpoint, 
-which include many redundant information (e.g. optimizer, 
-scheduler, model state_dict, etc.), to pytorch model checkpoint 
+This script export pytorch_lightning module checkpoint,
+which include many redundant information (e.g. optimizer,
+scheduler, model state_dict, etc.), to pytorch model checkpoint
 (only model state_dict & hyperparameters)
 
-For detail, see ../neuralfp/module/audio_fingerprint 
+For detail, see ../neuralfp/module/audio_fingerprint
 in function AudioFingerprint.export()
 """
 

@@ -6,7 +6,7 @@ dataset:
     segment_offset: 1.2
     segment_size: 1.0
     hop_size: 0.5
-    
+
     augmentation:
       background:
         dataset_dir: ../datasets/neural-audio-fp-dataset
@@ -18,7 +18,7 @@ dataset:
         dataset_dir: ../datasets/neural-audio-fp-dataset
         list_file: ./metadata/noise/impulse_response/train_split.jsonl
         length: 1.0
-  
+
   val:
     dataset_dir: ../datasets/neural-audio-fp-dataset
     audio_list_file: metadata/fma_medium/val_split.jsonl

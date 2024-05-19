@@ -9,18 +9,18 @@ services:
 
   # backend-api:
   #   container_name: backend-api
-  #   build: ./deploy/api/Dockerfile
+  #   build: ./deploy/api
   #   ports:
   #   volumes:
   #   depends_on:
   #     - "music-gen"
   #     - "music-embedding"
   #     - "milvus-standalone"
-    
+
 
   # music-gen:
   #   container_name: backend-music-gen
-  #   ports: 
+  #   ports:
   #   volumes:
 
 
