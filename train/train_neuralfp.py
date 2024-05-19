@@ -1,6 +1,5 @@
 import argparse
 
-import torch
 import pytorch_lightning as pl
 from omegaconf import OmegaConf, DictConfig
 
@@ -12,12 +11,9 @@ def main(config: DictConfig):
     module = AudioFingerprint(config)
 
     if config.model.get("pretrained_weights") is not None:
-        checkpoint = config.task.model.pretrained_weights
+        checkpoint = config.model.pretrained_weights
         print(f"Load checkpoint at {checkpoint}")
-        checkpoint = torch.load(checkpoint, map_location="cpu")
-        for attr, weights in checkpoint["state_dict"].items():
-            net = getattr(module, attr)
-            net.load_state_dict(weights, strict=False)
+        module = AudioFingerprint.load_from_checkpoint(checkpoint)
 
     callbacks = []
     learning_rate_cb = pl.callbacks.LearningRateMonitor()
