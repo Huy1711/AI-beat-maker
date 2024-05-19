@@ -1,9 +1,8 @@
 import argparse
 
 import pytorch_lightning as pl
-from omegaconf import OmegaConf, DictConfig
-
 from neuralfp.module.audio_fingerprint import AudioFingerprint
+from omegaconf import DictConfig, OmegaConf
 
 
 def main(config: DictConfig):
@@ -38,14 +37,14 @@ def main(config: DictConfig):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Training model')
+    parser = argparse.ArgumentParser(description="Training model")
     parser.add_argument(
-        '-c',
-        '--config',
+        "-c",
+        "--config",
         type=str,
         required=False,
         default="configs/train.yaml",
-        help='path to training config file (.yaml, .yml)'
+        help="path to training config file (.yaml, .yml)",
     )
     args = parser.parse_args()
 

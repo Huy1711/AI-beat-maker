@@ -18,12 +18,7 @@ class NTxentLoss(nn.modules.loss._Loss):
         x = torch.masked_select(x, mask_not_diag)
         return torch.reshape(x, (n_anchors, n_anchors - 1))
 
-    def forward(
-            self, 
-            emb_org: torch.Tensor, 
-            emb_rep: torch.Tensor,
-            n_anchors: int
-        ):
+    def forward(self, emb_org: torch.Tensor, emb_rep: torch.Tensor, n_anchors: int):
         labels = F.one_hot(
             torch.arange(0, n_anchors, device=emb_org.device),
             num_classes=n_anchors * 2 - 1,

@@ -1,12 +1,12 @@
+import pytorch_lightning as pl
 import torch
 import torch_optimizer as optim
-import pytorch_lightning as pl
 from omegaconf import DictConfig
 from torch.utils.data import DataLoader
 
+from ..criterion.contrastive_loss import NTxentLoss
 from ..data.datasets import MusicSegmentDataset, collate_data
 from ..model.neuralfp import NeuralAudioFingerprinter
-from ..criterion.contrastive_loss import NTxentLoss
 
 
 class AudioFingerprint(pl.LightningModule):
@@ -15,9 +15,7 @@ class AudioFingerprint(pl.LightningModule):
         self.save_hyperparameters()
         self.config = config
 
-        self.model = NeuralAudioFingerprinter(
-            **config["model"]["neuralfp"]
-        )
+        self.model = NeuralAudioFingerprinter(**config["model"]["neuralfp"])
         self.criterion = NTxentLoss()
 
     def _shared_step(
@@ -45,11 +43,9 @@ class AudioFingerprint(pl.LightningModule):
         loss = self._shared_step(xs, ys)
         self.log("val_loss", loss, sync_dist=True)
         return loss
-    
+
     def train_dataloader(self) -> DataLoader:
-        train_ds = MusicSegmentDataset(
-            config=self.config["dataset"]["train"]
-        )
+        train_ds = MusicSegmentDataset(config=self.config["dataset"]["train"])
         train_dl = DataLoader(
             dataset=train_ds,
             collate_fn=collate_data,
@@ -59,9 +55,7 @@ class AudioFingerprint(pl.LightningModule):
         return train_dl
 
     def val_dataloader(self) -> DataLoader:
-        val_ds = MusicSegmentDataset(
-            config=self.config["dataset"]["val"]
-        )
+        val_ds = MusicSegmentDataset(config=self.config["dataset"]["val"])
         val_dl = DataLoader(
             dataset=val_ds,
             collate_fn=collate_data,
@@ -69,7 +63,7 @@ class AudioFingerprint(pl.LightningModule):
             **self.config["dataset"]["loaders"],
         )
         return val_dl
-    
+
     def configure_optimizers(self):
         optimizer = optim.Lamb(
             self.parameters(),
@@ -78,7 +72,7 @@ class AudioFingerprint(pl.LightningModule):
 
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer,
-            T_max = len(self.train_dataloader()),
+            T_max=len(self.train_dataloader()),
             **self.config["scheduler"],
         )
         return {

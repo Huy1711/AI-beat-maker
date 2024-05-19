@@ -1,8 +1,7 @@
 import torch
 import torchaudio
-from omegaconf import OmegaConf
-
 from neuralfp.model.neuralfp import NeuralAudioFingerprinter
+from omegaconf import OmegaConf
 
 SAMPLE_RATE = 8000
 SEGMENT_SIZE = int(SAMPLE_RATE * 1.0)
@@ -21,6 +20,7 @@ transformation = torchaudio.transforms.MelSpectrogram(
     f_max=4000,
 )
 
+
 def prepare_input_feature(example_file):
     wav, sr = torchaudio.load(example_file)
     segments = wav.squeeze().unfold(0, SEGMENT_SIZE, HOP_SIZE)
@@ -28,6 +28,7 @@ def prepare_input_feature(example_file):
     features = transformation(segments)
     features = features.clamp(1e-5).log()
     return features, sr
+
 
 def load_torch_model():
     config = OmegaConf.load(CONFIG_PATH)
@@ -50,9 +51,9 @@ def convert_model():
 
 
 def test_output():
-    
+
     jit_model = torch.jit.load(MODEL_SAVE_PATH)
-    
+
     torch_model = load_torch_model()
 
     example_data, _ = prepare_input_feature(EXAMPLE_DATA)
@@ -60,8 +61,9 @@ def test_output():
     jit_output = jit_model(example_data)
     torch_output = torch_model(example_data)
 
-    assert torch.allclose(jit_output, torch_output), \
-        "Pytorch model output and TorchScript model output are not the same"
+    assert torch.allclose(
+        jit_output, torch_output
+    ), "Pytorch model output and TorchScript model output are not the same"
 
 
 if __name__ == "__main__":

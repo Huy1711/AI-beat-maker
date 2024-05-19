@@ -6,9 +6,16 @@ lightning_logs/
 volumes/
 datasets/
 cache/
+samples/
 
 *.wav
 *.mp3
 *.log
 *.egg-info/
 *.egg
+*.pt
+*.ckpt
+*.onnx
+*.plan
+
+.env

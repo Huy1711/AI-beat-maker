@@ -12,22 +12,21 @@ import argparse
 
 from neuralfp.module.audio_fingerprint import AudioFingerprint
 
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Training model')
+    parser = argparse.ArgumentParser(description="Training model")
     parser.add_argument(
-        '-f',
-        '--checkpoint',
+        "-f",
+        "--checkpoint",
         type=str,
         required=True,
-        help='lightning module checkpoint path (.ckpt)'
+        help="lightning module checkpoint path (.ckpt)",
     )
     parser.add_argument(
-        '-o',
-        '--output',
+        "-o",
+        "--output",
         type=str,
         required=True,
-        help='pytorch checkpoint save file name'
+        help="pytorch checkpoint save file name",
     )
     args = parser.parse_args()
 

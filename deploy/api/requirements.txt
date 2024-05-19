@@ -4,3 +4,9 @@ fastapi
 uvicorn
 pydantic
 requests
+omegaconf
+numpy
+soundfile
+torchaudio
+tritonclient[all]
+pymilvus==2.4.1
