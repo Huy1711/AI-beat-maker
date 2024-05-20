@@ -6,7 +6,6 @@ from omegaconf import DictConfig, OmegaConf
 
 
 def main(config: DictConfig):
-
     module = AudioFingerprint(config)
 
     if config.model.get("pretrained_weights") is not None:
@@ -36,7 +35,6 @@ def main(config: DictConfig):
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description="Training model")
     parser.add_argument(
         "-c",

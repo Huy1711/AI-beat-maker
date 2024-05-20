@@ -1,0 +1,2 @@
+class MusicDatabaseClient(object):
+    pass

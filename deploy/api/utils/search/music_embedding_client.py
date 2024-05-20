@@ -3,7 +3,7 @@ import torchaudio
 import tritonclient.grpc as grpcclient
 from tritonclient.utils import np_to_triton_dtype
 
-from .common import split_to_equal_chunk
+from ..common import split_to_equal_chunk
 
 EXTRACT_EMB_CHUNK_SIZE = 1024
 SAMPLE_RATE = 8000

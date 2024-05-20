@@ -40,7 +40,6 @@ def load_torch_model():
 
 
 def convert_model():
-
     model = load_torch_model()
 
     example = torch.rand(19, 256, 32)
@@ -51,7 +50,6 @@ def convert_model():
 
 
 def test_output():
-
     jit_model = torch.jit.load(MODEL_SAVE_PATH)
 
     torch_model = load_torch_model()
