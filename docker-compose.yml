@@ -2,7 +2,7 @@ services:
 
   # frontend-streamlit:
   #   container_name: frontend-streamlit
-  #   build: ./deploy/streamlit
+  #   build: ./deploy/frontend
   #   ports:
 
 
@@ -11,24 +11,17 @@ services:
     build: ./deploy/api
     ports:
       - 8080:8080
-    environment:
-      - SUNO_COOKIE=${SUNO_COOKIE}
-      - SUNO_SESSION_ID=${SUNO_SESSION_ID}
+    env_file:
+      - .env
+    # environment:
+    #   - MUSIC_EMBEDDING_URL=music-embedding:8001
+    #   - MUSIC_DATABASE_URL=http://milvus-standalone:19530
     volumes:
       - ./deploy/api:/app
-        # - MUSIC_EMBEDDING_URL=music-embedding:8001
-        # - MUSIC_DATABASE_URL=http://milvus-standalone:19530
         # depends_on:
         #   - "music-gen"
         #   - "music-embedding"
         #   - "milvus-standalone"
-
-
-        # music-gen:
-        #   container_name: backend-music-gen
-        #   ports:
-        #   volumes:
-
 
         # music-embedding:
         #   container_name: backend-music-embedding
