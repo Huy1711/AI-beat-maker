@@ -27,7 +27,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-suno_client = SunoClient(cookie=settings.cookie, session_id=settings.session_id)
+suno_client = SunoClient(
+    cookie=settings.suno_cookie, session_id=settings.suno_session_id
+)
 # music_embedding_client = MusicEmbeddingClient(settings.music_embedding_url)
 # music_database_client = MusicDatabaseClient(settings.music_database_url)
 
@@ -38,20 +40,22 @@ async def root():
 
 
 @app.post("/generate")
-async def generate_with_song_description(data: DescriptionModeGenerateParam):
+async def generate(data: DescriptionModeGenerateParam):
     try:
-        resp = await suno_client.generate(data.model_dump())
-        return resp
+        resp = await suno_client.generate_and_get_song(
+            data.model_dump(), is_custom=False
+        )
     except Exception as e:
         raise HTTPException(
             detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    return resp
 
 
 @app.get("/feed/{aid}")
 async def fetch_feed(aid: str):
     try:
-        resp = await suno_client.get_feed(aid)
+        resp = await suno_client.get_song_by_ids([aid])
         return resp
     except Exception as e:
         raise HTTPException(
