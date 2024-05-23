@@ -56,19 +56,20 @@ class SunoClient:
         t.start()
 
     async def generate(self, data):
-        headers = {"Authorization": f"Bearer {self.suno_cookie.get_token()}"}
-        headers.update(COMMON_HEADERS)
-        logger.info("Generating Song...")
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                url=GENERATE_MUSIC_URL, json=data, headers=headers
-            ) as resp:
-                response = await resp.json()
+        # headers = {"Authorization": f"Bearer {self.suno_cookie.get_token()}"}
+        # headers.update(COMMON_HEADERS)
+        # logger.info("Generating Song...")
+        # async with aiohttp.ClientSession() as session:
+        #     async with session.post(
+        #         url=GENERATE_MUSIC_URL, json=data, headers=headers
+        #     ) as resp:
+        #         response = await resp.json()
 
         ### For Debugging
-        # import json
-        # with open('/samples/gen_song_format.json', 'r') as f:
-        #     response = json.load(f)
+        import json
+
+        with open("/samples/gen_song_format.json", "r") as f:
+            response = json.load(f)
 
         error_message = response["metadata"]["error_message"]
         if error_message is not None:
@@ -89,17 +90,16 @@ class SunoClient:
     async def _wait_gen_song_complete(self, song_ids, timeout_secs=100):
         """Wait for song generating process to complete."""
         start_time = time.time()
-        song_urls = []
+        song_results = []
         logger.info("Getting Song...")
         while (time.time() - start_time) < timeout_secs:
             song_results = await self.get_song_by_ids(song_ids)
             is_comlete = all(song["status"] == "complete" for song in song_results)
             if is_comlete:
                 logger.info("Get Song Successfully")
-                song_urls = [song["audio_url"] for song in song_results]
-                return song_urls
+                return song_results
             time.sleep(3)
-        return song_urls
+        return song_results
 
     async def generate_and_get_song(self, data, is_custom=False):
         if is_custom:
@@ -112,11 +112,11 @@ class SunoClient:
             song_ids.append(song_metadata["id"])
         print(song_ids)
 
-        song_urls = await self._wait_gen_song_complete(song_ids)
-        if len(song_urls) == 0:
+        responses = await self._wait_gen_song_complete(song_ids)
+        if len(responses) == 0:
             raise Exception("Please try again!")
 
-        return song_urls
+        return responses
 
     # async def generate_custom(self, data):
     #     self.client.headers["Authorization"] = f"Bearer {self.token}"

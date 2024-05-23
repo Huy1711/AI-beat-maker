@@ -1,3 +1,6 @@
+import logging
+import time
+
 import numpy as np
 import torchaudio
 import tritonclient.grpc as grpcclient
@@ -9,6 +12,9 @@ EXTRACT_EMB_CHUNK_SIZE = 1024
 SAMPLE_RATE = 8000
 SEGMENT_SIZE = 1.0
 HOP_SIZE = 0.5
+
+logger = logging.getLogger("beat-maker-api")
+logging.basicConfig(level=logging.INFO)
 
 
 class MusicEmbeddingClient(object):
@@ -37,7 +43,8 @@ class MusicEmbeddingClient(object):
         features = features.numpy()
         return features, sr
 
-    def get_embeddings(self, file):
+    def get_embeddings(self, file) -> np.ndarray:
+        start = time.time()
         Audio, _ = self.prepare_feature(file)
 
         Audio_Segments = split_to_equal_chunk(Audio, chunk_size=EXTRACT_EMB_CHUNK_SIZE)
@@ -66,4 +73,5 @@ class MusicEmbeddingClient(object):
             output_data = response.as_numpy("output")
             Output_Embeddings.append(output_data)
         Output_Embeddings = np.concatenate(Output_Embeddings)
+        logger.info(f"Time extract embeddings: {time.time() - start}")
         return Output_Embeddings
