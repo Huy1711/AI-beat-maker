@@ -1,7 +1,9 @@
-from pymilvus import connections, db, exceptions
+from pymilvus import connections, db, exceptions, utility
 
 DATABASE_NAME = "beat_maker"
 COLLECTION_NAME = "beat_maker"
+INDEX_NAME = "vector_index"
+MILVUS_URL = "http://localhost:19530"
 
 try:
     connections.connect(
@@ -12,7 +14,6 @@ try:
 except exceptions.MilvusException as e:
     print("Error: {}".format(e))
 
+db.using_database(DATABASE_NAME)
 
-database = db.create_database(DATABASE_NAME)
-
-print("Available databases:", db.list_database())
+print("Available collections:", utility.list_collections())

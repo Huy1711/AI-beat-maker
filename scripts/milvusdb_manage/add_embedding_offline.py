@@ -1,31 +1,68 @@
-import glob
+""" This script extract audio files in the folder EXTRACT_FOLDER into embeddings
+and add to Milvus Vector DB. The extract and adding can be faster using multiprocessing.
+"""
 
+import glob
+import os
+
+import numpy as np
 import torch
 import torchaudio
+import tqdm
 from pymilvus import MilvusClient
 
-from deploy.api.utils.common import realpath_to_id, split_to_equal_chunk
-
-DATABASE_NAME = "beat-maker"
-COLLECTION_NAME = "beat-maker"
+DATABASE_NAME = "beat_maker"
+COLLECTION_NAME = "beat_maker"
 INDEX_NAME = "vector_index"
 MILVUS_URL = "http://localhost:19530"
 SAVE_MODEL_PATH = "./deploy/music_embedding/model_repository/neuralfp/1/model.pt"
 MILVUS_ADD_CHUNK_SIZE = 10_000
+EXTRACT_FOLDER = "/home/huynd/Code/AI-beat-maker/datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/db/"
 
-file_list = glob.glob("")
+file_list = glob.glob(os.path.join(EXTRACT_FOLDER, "**/*.wav"))
 device = "cpu"
 loaded_model = torch.jit.load(SAVE_MODEL_PATH, map_location=device)
 loaded_model.eval()
 milvus_client = MilvusClient(uri=MILVUS_URL, db_name=DATABASE_NAME)
 
-insert_total_count = 0
-for filepath in file_list:
-    wav, sr = torchaudio.load(filepath)
-    wav = wav.squeeze()
-    wav = wav.to(device)
+transformation = torchaudio.transforms.MelSpectrogram(
+    sample_rate=8000,
+    n_fft=1024,
+    hop_length=256,
+    n_mels=256,
+    f_min=300,
+    f_max=4000,
+)
 
-    embeddings = loaded_model(wav)
+
+def realpath_to_id(path):
+    if isinstance(path, int):
+        path = str(path)
+    return os.path.basename(os.path.splitext(path)[0])
+
+
+def split_to_equal_chunk(arr: np.array, chunk_size):
+    arr = np.array_split(arr, np.ceil(len(arr) / chunk_size))
+    return arr
+
+
+def prepare_feature(file, segment_size=8000, hop_size=4000):
+    wav, sr = torchaudio.load(file)
+    ## slice wav into segments
+    segments = wav.squeeze().unfold(0, segment_size, hop_size)
+    segments = segments - segments.mean(dim=1).unsqueeze(1)
+    ## extract mel-spectrogram
+    features = transformation(segments)
+    features = features.clamp(1e-5).log()
+    return features, sr
+
+
+insert_segments_total_count = 0
+for filepath in tqdm.tqdm(file_list, desc="Adding audio embeddings to DB"):
+    feature, sr = prepare_feature(filepath)
+    feature = feature.to(device)
+
+    embeddings = loaded_model(feature)
 
     data = []
     file_id = realpath_to_id(filepath)
@@ -39,10 +76,13 @@ for filepath in file_list:
         )
 
     chunked_data_list = split_to_equal_chunk(data, chunk_size=MILVUS_ADD_CHUNK_SIZE)
-
     for data_chunk in chunked_data_list:
         res = milvus_client.insert(
-            collection_name="audiofp",
+            collection_name=COLLECTION_NAME,
             data=data_chunk.tolist(),
         )
-    insert_total_count += len(data)
+    insert_segments_total_count += len(data)
+
+print(
+    f"Totally added {insert_segments_total_count} segments to the collection {COLLECTION_NAME} of database {DATABASE_NAME}"
+)

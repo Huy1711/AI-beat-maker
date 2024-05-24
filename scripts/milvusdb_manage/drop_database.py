@@ -1,7 +1,7 @@
 from pymilvus import connections, db, exceptions
 
-DATABASE_NAME = "beat-maker"
-COLLECTION_NAME = "beat-maker"
+DATABASE_NAME = "beat_maker"
+COLLECTION_NAME = "beat_maker"
 
 try:
     connections.connect(

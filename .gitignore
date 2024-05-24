@@ -17,5 +17,6 @@ samples/
 *.ckpt
 *.onnx
 *.plan
+*.zip
 
 .env

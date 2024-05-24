@@ -9,8 +9,8 @@ from pymilvus import (
     utility,
 )
 
-DATABASE_NAME = "beat-maker"
-COLLECTION_NAME = "beat-maker"
+DATABASE_NAME = "beat_maker"
+COLLECTION_NAME = "beat_maker"
 
 
 try:
@@ -54,11 +54,11 @@ embedding_field = FieldSchema(
 schema = CollectionSchema(
     fields=[id_field, file_id_field, offset_field, embedding_field],
     enable_dynamic_field=False,
-    description="audiofp collection",
+    description="beat_maker collection",
 )
 
 collection = Collection(
-    name=COLLECTION_NAME, schema=schema, using="default", shards_num=2  # Milvus server
+    name=COLLECTION_NAME, schema=schema, using="default", shards_num=1  # Milvus server
 )
 
 print("Available collections:", utility.list_collections())

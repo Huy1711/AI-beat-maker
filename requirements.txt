@@ -1,8 +1,3 @@
-aiohttp
-python-dotenv
-fastapi
-uvicorn
-pydantic
 requests
 omegaconf
 numpy
@@ -10,4 +5,5 @@ soundfile
 torchaudio
 tritonclient[all]
 pymilvus==2.3.7
-pydantic-settings
+kaggle
+tqdm

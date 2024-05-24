@@ -1,4 +1,4 @@
-from pymilvus import MilvusClient, connections, db, exceptions, utility
+from pymilvus import connections, db, exceptions, utility
 
 DATABASE_NAME = "beat_maker"
 COLLECTION_NAME = "beat_maker"
@@ -16,9 +16,8 @@ except exceptions.MilvusException as e:
 
 db.using_database(DATABASE_NAME)
 
-client = MilvusClient(uri=MILVUS_URL, db_name=DATABASE_NAME)
-index_params = MilvusClient.prepare_index_params()
+res = utility.index_building_progress(
+    collection_name=COLLECTION_NAME, index_name=INDEX_NAME
+)
 
-client.drop_collection(collection_name=COLLECTION_NAME)
-
-print("Available collections:", utility.list_collections())
+print(f"Index {INDEX_NAME} of collection {COLLECTION_NAME} info:", res)

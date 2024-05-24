@@ -17,8 +17,8 @@ logging.basicConfig(level=logging.INFO)
 class MusicDatabaseClient(object):
     def __init__(self, url):
         self.url = url
-        self.db_name = "beat-maker"
-        self.collection_name = "beat-maker"
+        self.db_name = "beat_maker"
+        self.collection_name = "beat_maker"
         ## Connect to Milvus server
         self.milvus_client = MilvusClient(uri=url, db_name=self.db_name)
 
@@ -37,7 +37,7 @@ class MusicDatabaseClient(object):
         logger.info(f"Time search embeddings: {time.time() - start}")
         return Search_Results
 
-    def _milvus_search_embeddings(self, embeddings, nprobe=10, topk=1):
+    def _milvus_search_embeddings(self, embeddings, nprobe=50, topk=1):
         search_params = {
             "metric_type": "IP",
             "params": {

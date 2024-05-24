@@ -12,7 +12,4 @@ try:
 except exceptions.MilvusException as e:
     print("Error: {}".format(e))
 
-
-database = db.create_database(DATABASE_NAME)
-
 print("Available databases:", db.list_database())
