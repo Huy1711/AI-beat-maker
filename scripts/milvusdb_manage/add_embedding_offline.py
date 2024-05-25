@@ -17,7 +17,7 @@ INDEX_NAME = "vector_index"
 MILVUS_URL = "http://localhost:19530"
 SAVE_MODEL_PATH = "./deploy/music_embedding/model_repository/neuralfp/1/model.pt"
 MILVUS_ADD_CHUNK_SIZE = 10_000
-EXTRACT_FOLDER = "/home/huynd/Code/AI-beat-maker/datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/db/"
+EXTRACT_FOLDER = "./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/db/"
 
 file_list = glob.glob(os.path.join(EXTRACT_FOLDER, "**/*.wav"))
 device = "cpu"

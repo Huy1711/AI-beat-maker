@@ -1,10 +1,14 @@
 services:
 
-  # frontend-streamlit:
-  #   container_name: frontend-streamlit
-  #   build: ./deploy/frontend
-  #   ports:
-
+  frontend-streamlit:
+    container_name: frontend-streamlit
+    build: ./deploy/frontend
+    ports:
+      - 8081:8081
+    environment:
+      - BACKEND_URL=http://backend-api:8080
+    volumes:
+      - ./deploy/frontend:/app
 
   backend-api:
     container_name: backend-api
@@ -18,6 +22,7 @@ services:
       - MUSIC_DATABASE_URL=http://milvus-standalone:19530
     volumes:
       - ./deploy/api:/app
+      - ./datasets:/app/datasets
       - ./samples/gen_song_format.json:/samples/gen_song_format.json
     depends_on:
       - "music-embedding"
@@ -40,7 +45,6 @@ services:
     #         - driver: nvidia
     #           capabilities: [ "gpu" ]
     #           device_ids: [ "0" ]
-
 
   milvus-etcd:
     container_name: milvus-etcd

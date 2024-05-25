@@ -1,5 +1,6 @@
 import glob
 import sys
+from collections import Counter
 
 import tqdm
 
@@ -19,33 +20,41 @@ Milvus_helper = MusicDatabaseClient(MILVUS_SERVER_URL)
 
 if __name__ == "__main__":
     results = []
-    for filepath in tqdm.tqdm(query_list):
+    for filepath in tqdm.tqdm(query_list[:3]):
         Embeddings = Triton_helper.get_embeddings(filepath)
         Search_Results = Milvus_helper.search_embeddings(Embeddings)
         results.append((filepath, Search_Results))
 
-print(results[0])
 
+Search_Results = [query_res[1] for query_res in results]
+True_Results = [query_res[0].split("/")[-1][:-4] for query_res in results]
 
-# Search_Results = [query_res[1] for query_res in results]
-# True_Results = [query_res[0].split("_")[4] for query_res in results]
-# Final_Results = []
+# from itertools import groupby
+
 # for result in Search_Results:
-#     Reranked_Results = reranking(
-#         result,
-#         segment_chunk_size=10,
-#         duplicate_segment_thresh=0.0,
-#         hop_size=0.5,
-#     )
-#     Final_Results.append(Reranked_Results)
+#     candidates = []
+#     for t, segment in enumerate(result):
+#         pred_file_id = segment[0]["entity"]["file_id"]
+#         pred_file_start = segment[0]["entity"]["offset"] - t
+#         if pred_file_start >= 0:
+#             candidates.append((pred_file_id, pred_file_start))
+#     guessed_file_ids = Counter([segment[0]["entity"]["file_id"] for segment in result])
+#     major_voting_result = guessed_file_ids.most_common(1)[0][0]
+#     Final_Results.append(major_voting_result)
+#     print(candidates)
 
-# Final_Results = [pred[0][0] for pred in Final_Results]
 
-# assert len(Final_Results) == len(True_Results)
+Final_Results = []
+for result in Search_Results:
+    guessed_file_ids = Counter([segment[0]["entity"]["file_id"] for segment in result])
+    major_voting_result = guessed_file_ids.most_common(1)[0][0]
+    Final_Results.append(major_voting_result)
 
-# count = 0
-# for pred, label in zip(Final_Results, True_Results):
-#     if pred == label:
-#         count += 1
+assert len(Final_Results) == len(True_Results)
+
+count = 0
+for pred, label in zip(Final_Results, True_Results):
+    if pred == label:
+        count += 1
 
 # print("Accuracy:", count / len(Final_Results))

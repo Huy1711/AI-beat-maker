@@ -4,29 +4,9 @@ from typing import Any, Optional
 from pydantic import BaseModel, Field
 
 
-class Response(BaseModel):
-    code: Optional[int] = 0
-    msg: Optional[str] = "success"
-    data: Optional[Any] = None
-
-
-class CustomModeGenerateParam(BaseModel):
-    """Generate with Custom Mode"""
-
-    prompt: str = Field(..., description="lyrics")
-    mv: str = Field(
-        ...,
-        description="model version, default: chirp-v3-0",
-        examples=["chirp-v3-0"],
-    )
-    title: str = Field(..., description="song title")
-    tags: str = Field(..., description="style of music")
-    continue_at: Optional[int] = Field(
-        default=None,
-        description="continue a new clip from a previous song, format number",
-        examples=[120],
-    )
-    continue_clip_id: Optional[str] = None
+class SunoInitParam(BaseModel):
+    session_id: str = Field(..., description="Suno Session ID")
+    cookie: str = Field(..., description="Suno Cookie")
 
 
 class DescriptionModeGenerateParam(BaseModel):

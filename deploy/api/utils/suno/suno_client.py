@@ -52,6 +52,7 @@ class SunoClient:
             time.sleep(10)
 
     def start_keep_alive(self):
+        logger.info("Created SunoClient! Start keeping alive session")
         t = Thread(target=self._keep_session_alive)
         t.start()
 
@@ -110,25 +111,10 @@ class SunoClient:
         song_ids = []
         for song_metadata in gen_response["clips"]:
             song_ids.append(song_metadata["id"])
-        print(song_ids)
+        # logger.info(song_ids)
 
         responses = await self._wait_gen_song_complete(song_ids)
         if len(responses) == 0:
             raise Exception("Please try again!")
 
         return responses
-
-    # async def generate_custom(self, data):
-    #     self.client.headers["Authorization"] = f"Bearer {self.token}"
-    #     logger.info("Generating Song...")
-    #     data = {
-    #         "make_instrumental": make_instrumental,
-    #         "mv": "chirp-v3-0",
-    #         "title": title,
-    #         "tag": tags,
-    #         "prompt": prompt,
-    #     }
-    #     response = self.client.post(GENERATE_MUSIC_URL, json=data)
-    #     response_json = response.json()
-    #     logger.info("Generated Song Successfully")
-    #     return response_json

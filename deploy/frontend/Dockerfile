@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10-slim
 
 WORKDIR /app
 
@@ -10,4 +10,7 @@ COPY . .
 
 EXPOSE 8081
 
-CMD [ "nohup", "streamlit", "run", "main.py", "--server.maxUploadSize=2" ]
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONIOENCODING=UTF-8
+
+CMD ["streamlit", "run", "Music_Generate.py", "--server.port", "8081"]
