@@ -66,7 +66,7 @@ async def generate(data: DescriptionModeGenerateParam):
 async def search(file: UploadFile = File(...)):
     logger.info(f"Search request: Received file {file.filename}")
     try:
-        embeddings = app.music_embedding_client.get_embeddings(file.file)
+        embeddings = app.music_embedding_client.get_embeddings(file)
         search_results = app.music_database_client.search_embeddings(embeddings)
         final_results = summary_result(search_results)
     except Exception as e:
@@ -77,11 +77,11 @@ async def search(file: UploadFile = File(...)):
         )
     finally:
         file.file.close()
-    # logger.info(f"Search request: Answered file {file.filename} : {final_results}")
-    return final_results
+    logger.info(f"Search request: Answered file {file.filename} : {final_results}")
+    return JSONResponse(content=final_results)
 
 
-@app.get("/song")
+@app.get("/songs/{file_id}")
 async def get_song(file_id: str):
     # logger.info(f"Search request: Received file {file.filename}")
     try:

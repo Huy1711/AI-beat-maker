@@ -33,9 +33,14 @@ class MusicEmbeddingClient(object):
         self.model_name = "neuralfp"
 
     def prepare_feature(self, file):
-        wav, sr = torchaudio.load(file)
+        audio_format = file.filename.split(".")[-1]  ## currently support wav, mp3
+        wav, sr = torchaudio.load(file.file, format=audio_format)
+        if sr != SAMPLE_RATE:
+            transform = torchaudio.transforms.Resample(sr, SAMPLE_RATE)
+            wav = transform(wav)
+        wav = wav.mean(dim=0)
         ## slice wav into segments
-        segments = wav.squeeze().unfold(0, self.segment_size, self.hop_size)
+        segments = wav.unfold(0, self.segment_size, self.hop_size)
         segments = segments - segments.mean(dim=1).unsqueeze(1)
         ## extract mel-spectrogram
         features = self.transformation(segments)
