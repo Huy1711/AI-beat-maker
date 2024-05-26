@@ -23,7 +23,7 @@ def get_unique_candidates(search_results) -> tp.List[tp.Tuple]:
     for current_offset, segment in enumerate(search_results):
         pred_song_id = segment[0]["entity"]["file_id"]
         pred_song_start = segment[0]["entity"]["offset"] - current_offset
-        # This is similarity score not distance as we use Inner product metric
+        # This is similarity score not distance as inner product metric is used
         pred_score = segment[0]["distance"]
         candidates.append((current_offset, pred_score, pred_song_start, pred_song_id))
     return candidates
@@ -50,10 +50,10 @@ def filter_and_format_result(candidates, mean_score_thresh=0.5, seconds_thresh=3
         start_frame, end_frame = group[0][0], group[-1][0]
         chunk_report = {
             "start": start_frame / 2,  # start second in the query audio
-            "duration": (end_frame - start_frame + 1) + 0.5,
+            "duration": (end_frame - start_frame + 1) / 2 + 0.5,
             "file_id": group[0][3],
             "score": mean_score,
-            "enrolled_start": group[0][2],
+            "enrolled_start": (group[0][2] + start_frame) / 2,
         }
         detected_chunks.append(chunk_report)
     return detected_chunks

@@ -57,20 +57,19 @@ class SunoClient:
         t.start()
 
     async def generate(self, data):
-        # headers = {"Authorization": f"Bearer {self.suno_cookie.get_token()}"}
-        # headers.update(COMMON_HEADERS)
-        # logger.info("Generating Song...")
-        # async with aiohttp.ClientSession() as session:
-        #     async with session.post(
-        #         url=GENERATE_MUSIC_URL, json=data, headers=headers
-        #     ) as resp:
-        #         response = await resp.json()
+        headers = {"Authorization": f"Bearer {self.suno_cookie.get_token()}"}
+        headers.update(COMMON_HEADERS)
+        logger.info("Generating Song...")
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=GENERATE_MUSIC_URL, json=data, headers=headers
+            ) as resp:
+                response = await resp.json()
 
-        ### For Debugging
-        import json
-
-        with open("/samples/gen_song_format.json", "r") as f:
-            response = json.load(f)
+        ### For Debugging and not to waste Suno tokens
+        # import json
+        # with open("/samples/gen_song_format.json", "r") as f:
+        #     response = json.load(f)
 
         error_message = response["metadata"]["error_message"]
         if error_message is not None:
@@ -95,7 +94,9 @@ class SunoClient:
         logger.info("Getting Song...")
         while (time.time() - start_time) < timeout_secs:
             song_results = await self.get_song_by_ids(song_ids)
-            is_comlete = all(song["status"] == "complete" for song in song_results)
+            is_comlete = all(
+                song["status"] in ["complete", "streaming"] for song in song_results
+            )
             if is_comlete:
                 logger.info("Get Song Successfully")
                 return song_results
