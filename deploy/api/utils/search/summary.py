@@ -67,5 +67,5 @@ def summary_result(search_results, mean_score_thresh=0.5, seconds_thresh=3.0):
     return final_result
 
 
-def get_song_by_ids(file_id):
+def get_song_path(file_id):
     return id2path_dict[file_id]

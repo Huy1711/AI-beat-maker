@@ -66,12 +66,10 @@ class SunoClient:
             ) as resp:
                 response = await resp.json()
 
-        ### For Debugging and not to waste Suno tokens
-        # import json
-        # with open("/samples/gen_song_format.json", "r") as f:
-        #     response = json.load(f)
-
-        error_message = response["metadata"]["error_message"]
+        if response.get("metadata"):
+            error_message = response["metadata"]["error_message"]
+        else:
+            raise Exception(f"Error: {response}")
         if error_message is not None:
             raise Exception(f"Error in prompt: {error_message}")
 
@@ -112,7 +110,6 @@ class SunoClient:
         song_ids = []
         for song_metadata in gen_response["clips"]:
             song_ids.append(song_metadata["id"])
-        # logger.info(song_ids)
 
         responses = await self._wait_gen_song_complete(song_ids)
         if len(responses) == 0:

@@ -1,9 +1,15 @@
+from typing import List
+
 from pydantic import BaseModel, Field
 
 
 class SunoInitParam(BaseModel):
     session_id: str = Field(..., description="Suno Session ID")
     cookie: str = Field(..., description="Suno Cookie")
+
+
+class SunoGetSongsParam(BaseModel):
+    ids: List[str] = Field(..., description="Suno Song IDs")
 
 
 class DescriptionModeGenerateParam(BaseModel):

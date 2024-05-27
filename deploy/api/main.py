@@ -5,10 +5,10 @@ from config import settings
 from fastapi import FastAPI, File, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from schemas import DescriptionModeGenerateParam, SunoInitParam
+from schemas import DescriptionModeGenerateParam, SunoGetSongsParam, SunoInitParam
 from utils.search.music_database_client import MusicDatabaseClient
 from utils.search.music_embedding_client import MusicEmbeddingClient
-from utils.search.summary import get_song_by_ids, summary_result
+from utils.search.summary import get_song_path, summary_result
 from utils.suno.suno_client import SunoClient
 
 logger = logging.getLogger("beat-maker-api")
@@ -49,6 +49,7 @@ async def generate(data: SunoInitParam):
 
 @app.post("/generate")
 async def generate(data: DescriptionModeGenerateParam):
+    logger.info("Generate request: Received")
     try:
         generate_results = await app.suno_client.generate_and_get_song(
             data.model_dump(), is_custom=False
@@ -59,7 +60,19 @@ async def generate(data: DescriptionModeGenerateParam):
         raise HTTPException(
             detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    logger.info("Generate request: Done")
     return JSONResponse(content=generate_results)
+
+
+@app.get("/suno-songs")
+async def fetch_feed(data: SunoGetSongsParam):
+    try:
+        responses = await app.suno_client.get_song_by_ids(data.model_dump()["ids"])
+    except Exception as e:
+        raise HTTPException(
+            detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    return JSONResponse(content=responses)
 
 
 @app.post("/search")
@@ -83,9 +96,8 @@ async def search(file: UploadFile = File(...)):
 
 @app.get("/songs/{file_id}")
 async def get_song(file_id: str):
-    # logger.info(f"Search request: Received file {file.filename}")
     try:
-        audio_file = get_song_by_ids(file_id)
+        audio_file = get_song_path(file_id)
     except Exception as e:
         logger.error(e)
         logger.error(traceback.format_exc())

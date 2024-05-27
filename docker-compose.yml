@@ -23,7 +23,6 @@ services:
     volumes:
       - ./deploy/api:/app
       - ./datasets:/app/datasets
-      - ./samples/gen_song_format.json:/samples/gen_song_format.json
     depends_on:
       - "music-embedding"
       - "milvus-standalone"
