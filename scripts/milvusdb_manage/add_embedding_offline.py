@@ -49,8 +49,8 @@ def split_to_equal_chunk(arr: np.array, chunk_size):
 
 def prepare_feature(file, segment_size=8000, hop_size=4000):
     """Load audio, resample if needed, and extract MelSpectrogram feature"""
-    audio_format = file.filename.split(".")[-1]  ## currently support wav, mp3
-    wav, sr = torchaudio.load(file.file, format=audio_format)
+    audio_format = file.split(".")[-1]  ## currently support wav, mp3
+    wav, sr = torchaudio.load(file, format=audio_format)
     if sr != SAMPLE_RATE:
         transform = torchaudio.transforms.Resample(sr, SAMPLE_RATE)
         wav = transform(wav)

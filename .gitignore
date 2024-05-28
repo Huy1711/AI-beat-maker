@@ -18,5 +18,6 @@ samples/
 *.onnx
 *.plan
 *.zip
+*.tar.gz
 
 .env

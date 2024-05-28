@@ -1,19 +1,19 @@
 # AI Music Generation Project
 
 ## Introduction
-This is a repository for my personal project, which is a simple web application that let you **generate music 🎵 through a chat interface 💬**. As the music generative AI models are widely trained on human's music, the generated music is very likely to have some similarity to the existed songs. Dealing with this ethical proplem, this project also provide a **music similarity search feature 🔍** to detect if the song have any existed similar music snippets.
+This is a repository for my personal project, which is a simple web application that lets you **generate music 🎵 through a chat interface 💬**. As the music generative AI models are widely trained on human music, the generated music is very likely to have some similarity to the existing songs. Dealing with this ethical problem, this project also provides a **music similarity search feature 🔍** to detect if the song has any similar music snippets.
 
 ## Overview
 
-As mentioned above, this app provide 2 main features:
+As mentioned above, this app provides 2 main features:
 - Music generation with Chat interface
 - Music similarity search
 
 The user interface of the app is powered by [Streamlit](https://streamlit.io/) and the backend API was implemented using [FastAPI](https://fastapi.tiangolo.com/).
 
-First, the music generation feature is mostly done by calling [Suno API](https://suno.com/). As the site has not published the API, so the API call must be provided with `Cookie` and `Session ID` of a logged in suno account.
+First, the music generation feature is mostly done by calling [Suno API](https://suno.com/). As the site has not published the API, the API call must be provided with `Cookie` and `Session ID` of a logged-in suno account.
 
-Second, the music similarity search feature is based on the **Audio Fingerprint** research topic which utilize a *Music Embedding Model* and a *Vector Database* to store and query the extracted embeddings. To deploy this feature, this project used [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) to deploy the model and [Milvus Vector Database](https://milvus.io/) for the retrieval task.
+Second, the music similarity search feature is based on the **Audio Fingerprint** research topic which utilizes a *Music Embedding Model* and a *Vector Database* to store and query the extracted embeddings. To deploy this feature, this project used [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) to deploy the model and [Milvus Vector Database](https://milvus.io/) for the retrieval task.
 
 ## Table of Contents
 - [Installation](#installation)
