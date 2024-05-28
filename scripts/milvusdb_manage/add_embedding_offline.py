@@ -1,4 +1,4 @@
-""" This script extract audio files in the folder EXTRACT_FOLDER into embeddings
+"""This script extract audio files in the folder EXTRACT_FOLDER into embeddings
 and add to Milvus Vector DB. The extract and adding can be faster using multiprocessing.
 """
 
@@ -17,6 +17,7 @@ INDEX_NAME = "vector_index"
 MILVUS_URL = "http://localhost:19530"
 SAVE_MODEL_PATH = "./deploy/music_embedding/model_repository/neuralfp/1/model.pt"
 MILVUS_ADD_CHUNK_SIZE = 10_000
+SAMPLE_RATE = 8_000
 EXTRACT_FOLDER = "./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/db/"
 
 file_list = glob.glob(os.path.join(EXTRACT_FOLDER, "**/*.wav"))
@@ -47,9 +48,15 @@ def split_to_equal_chunk(arr: np.array, chunk_size):
 
 
 def prepare_feature(file, segment_size=8000, hop_size=4000):
-    wav, sr = torchaudio.load(file)
+    """Load audio, resample if needed, and extract MelSpectrogram feature"""
+    audio_format = file.filename.split(".")[-1]  ## currently support wav, mp3
+    wav, sr = torchaudio.load(file.file, format=audio_format)
+    if sr != SAMPLE_RATE:
+        transform = torchaudio.transforms.Resample(sr, SAMPLE_RATE)
+        wav = transform(wav)
+    wav = wav.mean(dim=0)
     ## slice wav into segments
-    segments = wav.squeeze().unfold(0, segment_size, hop_size)
+    segments = wav.unfold(0, segment_size, hop_size)
     segments = segments - segments.mean(dim=1).unsqueeze(1)
     ## extract mel-spectrogram
     features = transformation(segments)

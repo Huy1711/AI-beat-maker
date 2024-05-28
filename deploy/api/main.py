@@ -11,7 +11,8 @@ from utils.search.music_embedding_client import MusicEmbeddingClient
 from utils.search.summary import get_song_path, summary_result
 from utils.suno.suno_client import SunoClient
 
-logger = logging.getLogger("beat-maker-api")
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
 app = FastAPI()
@@ -44,6 +45,7 @@ async def generate(data: SunoInitParam):
         raise HTTPException(
             detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    logger.info("Init Suno connection request successfully!")
     return JSONResponse({"message": "Success"})
 
 

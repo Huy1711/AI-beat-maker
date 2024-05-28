@@ -6,6 +6,7 @@ SAMPLE_RATE = 8000
 
 
 def show_audio_snippets(file, start_time, end_time, sample_rate=SAMPLE_RATE):
+    """Cut audio into snippet and show to the interface."""
     duration = end_time - start_time
     query_audio = sf.read(
         file=file,

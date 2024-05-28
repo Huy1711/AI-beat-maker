@@ -1,11 +1,13 @@
 from http.cookies import SimpleCookie
 
-"""
-This class is from https://github.com/SunoAI-API/Suno-API/blob/main/cookie.py
-"""
 
+class SunoCookie(object):
+    """
+    Class wrap the interaction with Suno session_id and cookie.
+    This class is originated from
+    https://github.com/SunoAI-API/Suno-API/blob/main/cookie.py
+    """
 
-class SunoCookie:
     def __init__(self):
         self.cookie = SimpleCookie()
         self.session_id = None

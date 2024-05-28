@@ -13,11 +13,17 @@ SAMPLE_RATE = 8000
 SEGMENT_SIZE = 1.0
 HOP_SIZE = 0.5
 
-logger = logging.getLogger("beat-maker-api")
+logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
 
 class MusicEmbeddingClient(object):
+    """
+    This class provide some helper functions to interact
+    with Triton Server that serving Music embedding model
+    for the music search feature
+    """
+
     def __init__(self, url):
         self.url = url
         self.transformation = torchaudio.transforms.MelSpectrogram(
@@ -33,6 +39,7 @@ class MusicEmbeddingClient(object):
         self.model_name = "neuralfp"
 
     def prepare_feature(self, file):
+        """Load audio, resample if needed, and extract MelSpectrogram feature"""
         audio_format = file.filename.split(".")[-1]  ## currently support wav, mp3
         wav, sr = torchaudio.load(file.file, format=audio_format)
         if sr != SAMPLE_RATE:
@@ -49,6 +56,7 @@ class MusicEmbeddingClient(object):
         return features, sr
 
     def get_embeddings(self, file) -> np.ndarray:
+        """Send extract embedding request to Triton Server"""
         start = time.time()
         Audio, _ = self.prepare_feature(file)
 

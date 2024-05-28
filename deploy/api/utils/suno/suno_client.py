@@ -8,7 +8,7 @@ import requests
 
 from .cookie import SunoCookie
 
-logger = logging.getLogger("beat-maker-api")
+logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
 
@@ -27,6 +27,11 @@ COMMON_HEADERS = {
 
 
 class SunoClient:
+    """
+    This class provide some helper functions to interact
+    with Suno API (suno.com) for the music generation feature
+    """
+
     def __init__(self, cookie: str, session_id: str) -> None:
         self.suno_cookie = SunoCookie()
         self.suno_cookie.set_session_id(session_id)
@@ -77,6 +82,7 @@ class SunoClient:
         return response
 
     async def get_song_by_ids(self, ids: tp.List[str]) -> tp.List[str]:
+        """Get songs that have been saved to Suno website using song ids"""
         headers = {"Authorization": f"Bearer {self.suno_cookie.get_token()}"}
         api_url = f'{BASE_URL}/api/feed/?ids={",".join(ids)}'
 

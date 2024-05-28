@@ -16,6 +16,8 @@ from ..utils.common import load_dataset
 
 
 class ImpulseResponseNoise(object):
+    """Randomly select reverb noise and add to audio"""
+
     def __init__(
         self,
         dataset_dir: str,
@@ -57,6 +59,10 @@ class ImpulseResponseNoise(object):
 
 
 class BackGroundNoise(object):
+    """Randomly select background noise and add to audio
+    (e.g. speech, laughter, vehicle sounds, etc.)
+    """
+
     def __init__(
         self,
         dataset_dir: str,

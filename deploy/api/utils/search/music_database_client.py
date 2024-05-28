@@ -10,11 +10,16 @@ MILVUS_SEARCH_SIZE_LIMIT = 16_384
 MILVUS_ADD_CHUNK_SIZE = 10_000
 
 
-logger = logging.getLogger("beat-maker-api")
+logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
 
 class MusicDatabaseClient(object):
+    """
+    This class provide some helper functions to interact
+    with Milvus Vector Database for the music search feature
+    """
+
     def __init__(self, url):
         self.url = url
         self.db_name = "beat_maker"
@@ -23,6 +28,10 @@ class MusicDatabaseClient(object):
         self.milvus_client = MilvusClient(uri=url, db_name=self.db_name)
 
     def search_embeddings(self, Embeddings):
+        """
+        Split the query embeddings if its size larger than
+        the search limit and send those splited search requests.
+        """
         start = time.time()
         self.load_collection()
 

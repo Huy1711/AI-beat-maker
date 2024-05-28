@@ -37,6 +37,7 @@ def filter_and_format_result(candidates, mean_score_thresh=0.5, seconds_thresh=3
          [(12, 0.6421586275100708, 0, '001028')
           (13, 0.5211837291717529, 0, '001028')
           (14, 0.6640710830688477, 0, '001028')]
+    Finally, return a json formated result (that is a list of chunk reports)
     """
 
     segments_thresh = int(seconds_thresh * 2 - 1)  # e.g. 3s audio ~ 5 embeddings

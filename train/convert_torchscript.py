@@ -50,6 +50,10 @@ def convert_model():
 
 
 def test_output():
+    """
+    Ensure the original pytorch model and
+    the exported jit model have the same output
+    """
     jit_model = torch.jit.load(MODEL_SAVE_PATH)
 
     torch_model = load_torch_model()

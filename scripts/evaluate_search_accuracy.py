@@ -1,3 +1,9 @@
+"""
+This script evaluate accuracy of audio fingerprint model by utilizing the
+deployed Milvus Vector DB and neuralFP model using Triton Server.
+Please turn those services on before running this scripts.
+"""
+
 import glob
 import sys
 from collections import Counter
@@ -29,21 +35,6 @@ if __name__ == "__main__":
 Search_Results = [query_res[1] for query_res in results]
 True_Results = [query_res[0].split("/")[-1][:-4] for query_res in results]
 
-# from itertools import groupby
-
-# for result in Search_Results:
-#     candidates = []
-#     for t, segment in enumerate(result):
-#         pred_file_id = segment[0]["entity"]["file_id"]
-#         pred_file_start = segment[0]["entity"]["offset"] - t
-#         if pred_file_start >= 0:
-#             candidates.append((pred_file_id, pred_file_start))
-#     guessed_file_ids = Counter([segment[0]["entity"]["file_id"] for segment in result])
-#     major_voting_result = guessed_file_ids.most_common(1)[0][0]
-#     Final_Results.append(major_voting_result)
-#     print(candidates)
-
-
 Final_Results = []
 for result in Search_Results:
     guessed_file_ids = Counter([segment[0]["entity"]["file_id"] for segment in result])
@@ -57,4 +48,4 @@ for pred, label in zip(Final_Results, True_Results):
     if pred == label:
         count += 1
 
-# print("Accuracy:", count / len(Final_Results))
+print("Accuracy:", count / len(Final_Results))
