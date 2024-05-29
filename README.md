@@ -92,6 +92,12 @@ To get the suno `session_id` and `cookie`, follow these steps:
 
 ## Demo
 
+Music Generation Chat interface  |  Music Search interface
+:-------------------------:|:-------------------------:
+![music_gen_demo](./docs/images/music_generation_demo.png) | ![music_search_demo](./docs/images/music_search_demo.png)
+
+Video demo: [Google Drive link](https://drive.google.com/file/d/1JjCVqMwW-2azgwTtjPgFX2xQ0ZO1Ce3t/view?usp=sharing)
+
 Note: Due to the limitation in the number of song in the Vector Database, the positive music search cases are rare. If you want to test the positive cases, please use the song inside `./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/query` folder which include the perturbed version of the songs in the database. Otherwise, you will need to add more songs to the database (see ``./scripts/milvusdb_manage/add_embedding_offline.py``).
 
 ## Contributing
