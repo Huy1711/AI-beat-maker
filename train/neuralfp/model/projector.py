@@ -3,6 +3,11 @@ import torch.nn.functional as F
 
 
 class LinearProjector(nn.Module):
+    """
+    Original linear projector code come from
+        https://github.com/stdio2016/pfann/blob/main/model.py
+    """
+
     __constants__ = ["d", "h"]
 
     def __init__(self, d, h, u):

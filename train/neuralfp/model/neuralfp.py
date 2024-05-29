@@ -6,6 +6,11 @@ from .projector import LinearProjector
 
 
 class NeuralAudioFingerprinter(nn.Module):
+    """
+    Original model code come from
+        https://github.com/stdio2016/pfann/blob/main/model.py
+    """
+
     def __init__(
         self,
         d: int = 128,

@@ -2,6 +2,11 @@ import torch.nn as nn
 
 
 class SepConvEncoder(nn.Module):
+    """
+    Original encoder code come from
+        https://github.com/stdio2016/pfann/blob/main/model.py
+    """
+
     def __init__(self, d, h, in_F, segment_size, stft_hop, sample_rate):
         super(SepConvEncoder, self).__init__()
         in_T = (int(segment_size * sample_rate) + stft_hop - 1) // stft_hop
