@@ -17,6 +17,12 @@ Second, the music similarity search feature is based on the **Audio Fingerprint*
 
 The music embedding model is trained using [Pytorch](https://pytorch.org/) and based on Audio Fingerprint research field. For further training details, please visit the directory `./train/README.md`.
 
+## User Interfaces
+
+Music Generation Chat interface  |  Music Search interface
+:-------------------------:|:-------------------------:
+![music_gen_demo](./docs/images/music_generation_demo.png) | ![music_search_demo](./docs/images/music_search_demo.png)
+
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
@@ -97,16 +103,11 @@ To get Suno `Session ID` and `Cookie`, follow these steps:
 
 ![suno_tutorial](./docs/images/suno_tutorial.jpg)
 
+Note: Due to the limitation in the number of song in the Vector Database, the positive music search cases are rare. If you want to test the positive cases, please use the song inside `./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/query` folder which include the perturbed version of the songs in the database. Otherwise, you will need to add more songs to the database (see ``./scripts/milvusdb_manage/add_embedding_offline.py``).
 
 ## Demo
 
-Music Generation Chat interface  |  Music Search interface
-:-------------------------:|:-------------------------:
-![music_gen_demo](./docs/images/music_generation_demo.png) | ![music_search_demo](./docs/images/music_search_demo.png)
-
 Video demo: [Google Drive link](https://drive.google.com/file/d/1JjCVqMwW-2azgwTtjPgFX2xQ0ZO1Ce3t/view?usp=sharing)
-
-Note: Due to the limitation in the number of song in the Vector Database, the positive music search cases are rare. If you want to test the positive cases, please use the song inside `./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/query` folder which include the perturbed version of the songs in the database. Otherwise, you will need to add more songs to the database (see ``./scripts/milvusdb_manage/add_embedding_offline.py``).
 
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or send me an email via nguyenduchuy1711@gmail.com.
