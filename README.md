@@ -89,7 +89,14 @@ bash ./scripts/prepare_milvus.sh
 
 The application will be available at `http://localhost:8081`.
 
-To get the suno `session_id` and `cookie`, follow these steps:
+To get Suno `Session ID` and `Cookie`, follow these steps:
+1. Go to the website https://suno.com/
+2. Log in with your account
+3. Press `F12` or Right click + choose "Inspect"
+4. Select `Network` tab and follow the below picture
+
+![suno_tutorial](./docs/images/suno_tutorial.jpg)
+
 
 ## Demo
 
