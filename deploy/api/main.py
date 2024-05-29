@@ -11,7 +11,6 @@ from utils.search.music_embedding_client import MusicEmbeddingClient
 from utils.search.summary import get_song_path, summary_result
 from utils.suno.suno_client import SunoClient
 
-logging.config.fileConfig("logging.conf")
 logger = logging.getLogger()
 logging.basicConfig(level=logging.INFO)
 
