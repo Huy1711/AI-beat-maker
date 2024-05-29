@@ -58,13 +58,13 @@ class MusicEmbeddingClient(object):
     def get_embeddings(self, file) -> np.ndarray:
         """Send extract embedding request to Triton Server"""
         start = time.time()
-        Audio, _ = self.prepare_feature(file)
+        audio, _ = self.prepare_feature(file)
 
-        Audio_Segments = split_to_equal_chunk(Audio, chunk_size=EXTRACT_EMB_CHUNK_SIZE)
+        audio_segments = split_to_equal_chunk(audio, chunk_size=EXTRACT_EMB_CHUNK_SIZE)
 
         ## Send embedding requests to Triton server
-        Output_Embeddings = []
-        for input_audio in Audio_Segments:
+        output_embeddings = []
+        for input_audio in audio_segments:
             inputs = [
                 grpcclient.InferInput(
                     "input",
@@ -84,7 +84,7 @@ class MusicEmbeddingClient(object):
 
             # result = response.get_response()
             output_data = response.as_numpy("output")
-            Output_Embeddings.append(output_data)
-        Output_Embeddings = np.concatenate(Output_Embeddings)
+            output_embeddings.append(output_data)
+        output_embeddings = np.concatenate(output_embeddings)
         logger.info(f"Time extract embeddings: {time.time() - start}")
-        return Output_Embeddings
+        return output_embeddings

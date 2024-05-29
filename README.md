@@ -40,14 +40,15 @@ Note: This project is built and tested on `python 3.10`.
 
 ### Download Music Embedding Model
 
-Visit this [Google Drive](https://drive.google.com/file/d/1DPwgDD0xxQsIY4ru2QaH1wpngxG3VvJY/view?usp=sharing) or use the command below to download the model on Kaggle:
+Visit this [Google Drive](https://drive.google.com/file/d/1DPwgDD0xxQsIY4ru2QaH1wpngxG3VvJY/view?usp=sharing) or use the command below to download the model:
 
+(For download model using Kaggle CLI, follow the [Kaggle API installation and authentication](https://www.kaggle.com/docs/api) instruction to setup)
 ```bash
-# Download model on Kaggle
+# Download model on Kaggle and untar the model file
 kaggle models instances versions download huy1711/model.pt/pyTorch/v1/1
-
-# Untar the model file and move to Triton model_repository folder
 tar -xvf model.pt.tar.gz
+
+# Move to Triton model_repository folder
 mv model.pt ./deploy/music_embedding/model_repository/neuralfp/1/
 ```
 
@@ -81,7 +82,7 @@ To start the application, run the following command:
 docker-compose up -d
 ```
 
-To add `fma_medium` demo dataset to Milvus Vector DB, use the following command
+To add `fma_medium` demo dataset to Milvus Vector DB, use the following command:
 ```
 bash ./scripts/prepare_milvus.sh
 ```
