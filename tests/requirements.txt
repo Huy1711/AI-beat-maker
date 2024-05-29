@@ -1,5 +1,0 @@
-torch
-torchaudio
-tritonclient[all]
-pymilvus==2.3.5
-numpy
