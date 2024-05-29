@@ -15,6 +15,8 @@ First, the music generation feature is mostly done by calling [Suno API](https:/
 
 Second, the music similarity search feature is based on the **Audio Fingerprint** research topic which utilizes a *Music Embedding Model* and a *Vector Database* to store and query the extracted embeddings. To deploy this feature, this project used [NVIDIA Triton Inference Server](https://developer.nvidia.com/triton-inference-server) to deploy the model and [Milvus Vector Database](https://milvus.io/) for the retrieval task.
 
+The music embedding model is trained using [Pytorch](https://pytorch.org/) and based on Audio Fingerprint research field. For further training details, please visit the directory `./train/README.md`.
+
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
@@ -51,7 +53,7 @@ mv model.pt ./deploy/music_embedding/model_repository/neuralfp/1/
 
 ### Prepare Demo Dataset for Music Search
 
-For a quick demo, I tried to use the pre-processed `fma_medium` dataset available at [Kaggle datasets](https://www.kaggle.com/datasets/mimbres/neural-audio-fingerprint). Please use the commands below to download the dataset:
+For a quick demo, I tried to use the pre-processed `fma_medium` dataset available at [Kaggle datasets](https://www.kaggle.com/datasets/mimbres/neural-audio-fingerprint). If you want to use the CLI, follow the [Kaggle API installation and authentication](https://www.kaggle.com/docs/api) instruction, and use the commands below to download the dataset:
 
 (Note: You can skip this step if you already downloaded the dataset by following the preparation instruction in `./train` folder)
 ```bash
@@ -61,7 +63,7 @@ mkdir ./datasets
 unzip neural-audio-fingerprint.zip -d ./datasets/
 ```
 
-After unzip the dataset to `"./datasets"` folder, run the dataset preparation script
+After unzipping, the dataset should be available at `./datasets/neural-audio-fp-dataset` folder, then run the dataset preparation script
 
 ```bash
 python ./scripts/make_id2path_dict.py
@@ -71,7 +73,7 @@ python ./scripts/make_id2path_dict.py
 This project supports deployment using `docker-compose`.
 For the installation instruction, please visit https://docs.docker.com/compose/install/
 
-If you want to change the Milvus database volume directory (default is `"./volumes"`), change the path in the `.env.example` file and **rename the file to `.env`**.
+If you want to change the Milvus database volume directory (default is `./volumes`), change the path in the `.env.example` file and **rename the file to `.env`**.
 
 To start the application, run the following command:
 
@@ -90,7 +92,7 @@ To get the suno `session_id` and `cookie`, follow these steps:
 
 ## Demo
 
-Due to the limitation in the number of song in the Vector Database, the positive music search cases are rare. If you want to test the positive cases, please use the song inside `./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/query` folder which include the perturbed version of the songs in the database. Otherwise, you will need to add more songs to the database (see ``./scripts/milvusdb_manage/add_embedding_offline.py``).
+Note: Due to the limitation in the number of song in the Vector Database, the positive music search cases are rare. If you want to test the positive cases, please use the song inside `./datasets/neural-audio-fp-dataset/music/test-query-db-500-30s/query` folder which include the perturbed version of the songs in the database. Otherwise, you will need to add more songs to the database (see ``./scripts/milvusdb_manage/add_embedding_offline.py``).
 
 ## Contributing
 If you find any issues or have suggestions for improvements, please feel free to open an issue or send me an email via nguyenduchuy1711@gmail.com.
